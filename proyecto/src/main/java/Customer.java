@@ -34,7 +34,8 @@ public class Customer {
 
             
             // determinar cantidades para cada línea
-            amount(thisAmount,each);
+            Rental r=new Rental();
+            r.setGetCharge(thisAmount, each);
 
             // añadir puntos de alquiler frecuente
             frequentRenterPoints ++;
@@ -70,6 +71,7 @@ public class Customer {
             }
          return thisAmount;
     }
+    
     public String getName() {
         return _name;
     }
