@@ -1,3 +1,12 @@
+
+/*
+## Refactorización 1
+Simplificar el método statement de la clase Customer mediante la extracción de un método público llamado amountFor 
+que contenga la lógica que distingue entre Movie.REGULAR, Movie.NEW_RELEASE y Movie.CHILDRENS, para aplicar diferentes 
+tarifas de alquiler. Se pretendo con ello tener un método statement más sencillo y fácil de mantener. Además deberá 
+devolver un double.
+*/
+
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -12,7 +21,8 @@ public class Customer {
     public void addRental (Rental arg) {
         _rentals.addElement(arg);
     }
-
+    
+    //Metodo Statement 
     public String statement () {
         double totalAmount = 0;
         int frequentRenterPoints = 0;
@@ -22,8 +32,28 @@ public class Customer {
             double thisAmount = 0;
             Rental each = (Rental) rentals.nextElement();
 
-            // determine amounts for each line
-            switch (each.getMovie().getPriceCode()) {
+            
+            // determinar cantidades para cada línea
+            amount(thisAmount,each);
+
+            // añadir puntos de alquiler frecuente
+            frequentRenterPoints ++;
+            // agregue una bonificación para un nuevo lanzamiento de alquiler de dos días
+            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1)
+                frequentRenterPoints ++;
+            // mostrar cifras para este alquiler
+            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
+            totalAmount += thisAmount;
+        }
+        // añadir líneas de pie de página
+        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+        return result;
+    }
+    
+    
+    public double amount(double thisAmount ,Rental each){
+         switch (each.getMovie().getPriceCode()) {
                 case Movie.REGULAR:
                     thisAmount += 2;
                     if (each.getDaysRented() > 2)
@@ -38,22 +68,8 @@ public class Customer {
                         thisAmount += (each.getDaysRented() - 3) * 1.5;
                     break;
             }
-
-            // add frequent renter points
-            frequentRenterPoints ++;
-            // add bounus for a two day new release rental
-            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1)
-                frequentRenterPoints ++;
-            // show figures for this rental
-            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
-        }
-        // add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
-        return result;
+         return thisAmount;
     }
-
     public String getName() {
         return _name;
     }
