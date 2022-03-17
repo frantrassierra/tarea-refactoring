@@ -36,15 +36,11 @@ public class Customer {
             // determinar cantidades para cada línea
             Rental r=new Rental();
             r.setGetCharge(thisAmount, each);
-
+           
+            
             // añadir puntos de alquiler frecuente
-            frequentRenterPoints ++;
-            // agregue una bonificación para un nuevo lanzamiento de alquiler de dos días
-            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1)
-                frequentRenterPoints ++;
-            // mostrar cifras para este alquiler
-            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
+            Movie m=new Movie();
+            getFrequentRenterPoints(frequentRenterPoints, each, result, totalAmount, thisAmount);
         }
         // añadir líneas de pie de página
         result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
